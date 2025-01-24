@@ -12,12 +12,12 @@ import Button from '@mui/material/Button'
 import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined'
 
 const BOARDBAR_STYLE = {
-  color: 'primary.main',
-  bgcolor: 'white',
+  color: 'white',
+  bgcolor: 'transparent',
   paddingX: '5px',
   borderRadius: '5px',
   '& .MuiSvgIcon-root': {
-    color: 'primary.main'
+    color: 'white'
     },
   '&:hover': {
     bgcolor: 'primary.50'
@@ -32,10 +32,11 @@ function BoardBar() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        gap: 2,
+        gap: 2, 
         paddingX: 2,
         overflowX: 'auto',
-        borderTop: '1px solid #00bfa5',
+        bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#34495e' : '#1976d2'),
+        borderBottom: '1px solid white',
       }}>
 
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2}}>
@@ -81,14 +82,28 @@ function BoardBar() {
       </Box>
 
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2}}>
-        <Button variant="outlined" startIcon={<PersonAddAltOutlinedIcon />}>Invite</Button>
+        <Button 
+          variant="outlined" 
+          startIcon={<PersonAddAltOutlinedIcon />}
+          sx={{ 
+            color: 'white',
+             borderColor: 'white',
+             '&:hover': {
+               borderColor: 'white',
+             }
+          }}
+          >
+            Invite
+        </Button>
         <AvatarGroup
           max={5} 
           sx={{ 
+            gap: '10px',
             '& .MuiAvatarGroup-avatar': {
               width: '28px',
               height: '28px',
               fontSize: '16 ',
+              border: 'none'
             },
           }}
         >
