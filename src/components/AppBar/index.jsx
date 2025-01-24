@@ -15,6 +15,7 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
 import Tooltip from '@mui/material/Tooltip'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import Profiles from './Menus/Profiles'
+import AddToPhotosOutlinedIcon from '@mui/icons-material/AddToPhotosOutlined'
 
 
 function AppBar() {
@@ -41,7 +42,7 @@ function AppBar() {
               <Recent />
               <Templates />
               <Starred />
-              <Button variant="outlined">Create</Button>
+              <Button variant="outlined" startIcon={<AddToPhotosOutlinedIcon />}>Create</Button>
             </Box>
 
         </Box>

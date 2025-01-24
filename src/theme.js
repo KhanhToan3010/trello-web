@@ -1,13 +1,11 @@
 import { experimental_extendTheme as extendTheme} from '@mui/material/styles'
 import { deepOrange, orange, cyan, teal } from '@mui/material/colors'
-import { colors } from '@mui/material'
-import { Height } from '@mui/icons-material'
 
 // Create a theme instance.
 const theme = extendTheme({
     trelloCustom:{
       headerHeight: '62px',
-      boardBarHeight: '68px',
+      boardBarHeight: '54px',
     },
     colorSchemes: {
       light: {

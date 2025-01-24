@@ -1,16 +1,136 @@
-import Box from '@mui/material/Box';
+import Box from '@mui/material/Box'
+import Chip from '@mui/material/Chip'
+import DashboardIcon from '@mui/icons-material/Dashboard'
+import VpnLockIcon from '@mui/icons-material/VpnLock'
+import AddToDriveIcon from '@mui/icons-material/AddToDrive'
+import BoltIcon from '@mui/icons-material/Bolt'
+import FilterListIcon from '@mui/icons-material/FilterList'
+import Avatar from '@mui/material/Avatar'
+import Tooltip from '@mui/material/Tooltip'
+import AvatarGroup from '@mui/material/AvatarGroup'
+import Button from '@mui/material/Button'
+import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined'
+
+const BOARDBAR_STYLE = {
+  color: 'primary.main',
+  bgcolor: 'white',
+  paddingX: '5px',
+  borderRadius: '5px',
+  '& .MuiSvgIcon-root': {
+    color: 'primary.main'
+    },
+  '&:hover': {
+    bgcolor: 'primary.50'
+  },
+}
 
 function BoardBar() {
   return (
 <Box sx={{
         height: '100%',
-        backgroundColor: 'primary.dark',
         height: (theme) => theme.trelloCustom.boardBarHeight,
         display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: 2,
+        paddingX: 2,
+        overflowX: 'auto',
+        borderTop: '1px solid #00bfa5',
       }}>
-        Board Bar
+
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2}}>
+      <Chip 
+        sx={ BOARDBAR_STYLE }
+        icon={<DashboardIcon />} 
+        label= " KhanhToanDev DashBoard" 
+        //clickable
+        onClick={() => {}}
+      />
+
+      <Chip 
+        sx={ BOARDBAR_STYLE }
+        icon={<VpnLockIcon />} 
+        label= " Public/Private Workspalce" 
+        //clickable
+        onClick={() => {}}
+      />
+
+      <Chip 
+        sx={ BOARDBAR_STYLE }
+        icon={<AddToDriveIcon />} 
+        label= " Add To Google Drive" 
+        //clickable
+        onClick={() => {}}
+      />
+      <Chip 
+        sx={ BOARDBAR_STYLE }
+        icon={<BoltIcon />} 
+        label= " Automation " 
+        //clickable
+        onClick={() => {}}
+      />
+      <Chip 
+        sx={ BOARDBAR_STYLE }
+        icon={<FilterListIcon />} 
+        label= " Filters" 
+        //clickable
+        onClick={() => {}}
+      />
+
+      
       </Box>
+
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2}}>
+        <Button variant="outlined" startIcon={<PersonAddAltOutlinedIcon />}>Invite</Button>
+        <AvatarGroup
+          max={5} 
+          sx={{ 
+            '& .MuiAvatarGroup-avatar': {
+              width: '28px',
+              height: '28px',
+              fontSize: '16 ',
+            },
+          }}
+        >
+          <Tooltip title="khanhtoandev">
+            <Avatar
+              alt='khanhtoandev'
+              src='https://tophinhanh.net/wp-content/uploads/2023/10/facebook-doi-5.jpg'
+            />
+          </Tooltip>
+          <Tooltip title="khanhtoandev">
+            <Avatar
+              alt='khanhtoandev'
+              src='https://tophinhanh.net/wp-content/uploads/2023/10/avatar-doi-nguoi-that-3.jpg'
+            />
+          </Tooltip>
+          <Tooltip title="khanhtoandev">
+            <Avatar
+              alt='khanhtoandev'
+              src='https://tophinhanh.net/wp-content/uploads/2023/10/avatar-doi-nguoi-that-4.jpg'
+            />
+          </Tooltip>
+          <Tooltip title="khanhtoandev">
+            <Avatar
+              alt='khanhtoandev'
+              src='https://tophinhanh.net/wp-content/uploads/2023/10/avatar-doi-nguoi-that-7.jpg'
+            />
+          </Tooltip>
+          <Tooltip title="khanhtoandev">
+            <Avatar
+              alt='khanhtoandev'
+              src='https://tophinhanh.net/wp-content/uploads/2023/10/facebook-doi-5.jpg'
+            />
+          </Tooltip>
+          <Tooltip title="khanhtoandev">
+            <Avatar
+              alt='khanhtoandev'
+              src='https://tophinhanh.net/wp-content/uploads/2023/10/facebook-doi-5.jpg'
+            />
+          </Tooltip>
+        </AvatarGroup>
+      </Box>
+    </Box>
   )
 }
 
