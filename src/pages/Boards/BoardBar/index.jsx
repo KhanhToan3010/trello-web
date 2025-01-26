@@ -99,11 +99,15 @@ function BoardBar() {
           max={5} 
           sx={{ 
             gap: '10px',
-            '& .MuiAvatarGroup-avatar': {
+            '& .MuiAvatar-root': {
               width: '28px',
               height: '28px',
               fontSize: '16 ',
-              border: 'none'
+              border: 'none',
+              color: 'white',
+              fontSize: '12px',
+              cursor: 'pointer',
+              '&:first-of-type': { bgcolor: '#a4b0be'}
             },
           }}
         >
