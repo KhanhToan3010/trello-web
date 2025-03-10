@@ -10,6 +10,7 @@ import Tooltip from '@mui/material/Tooltip'
 import AvatarGroup from '@mui/material/AvatarGroup'
 import Button from '@mui/material/Button'
 import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined'
+import { capitalizeFirstLetter } from '~/utils/formatters'
 
 const BOARDBAR_STYLE = {
   color: 'white',
@@ -24,7 +25,7 @@ const BOARDBAR_STYLE = {
   },
 }
 
-function BoardBar() {
+function BoardBar({ board }) {
   return (
 <Box sx={{
         height: '100%',
@@ -43,7 +44,7 @@ function BoardBar() {
       <Chip 
         sx={ BOARDBAR_STYLE }
         icon={<DashboardIcon />} 
-        label= " KhanhToanDev DashBoard" 
+        label= {board?.title} 
         //clickable
         onClick={() => {}}
       />
@@ -51,7 +52,7 @@ function BoardBar() {
       <Chip 
         sx={ BOARDBAR_STYLE }
         icon={<VpnLockIcon />} 
-        label= " Public/Private Workspalce" 
+        label= {capitalizeFirstLetter(board?.type)}
         //clickable
         onClick={() => {}}
       />
