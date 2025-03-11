@@ -11,7 +11,6 @@ import { Card as MuiCard } from '@mui/material'
 
 
 function Card({ card }) {
-  console.log(card); // { _id: '1', title: 'Card 1', cover: 'https://source.unsplash.com/random/300x140', memberIds: [ '1', '2' ], comments: [ '1', '2' ], attachments: [ '1', '2' ] }
   return (
     <MuiCard sx={{ 
       cursor: 'pointer',
