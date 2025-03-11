@@ -18,30 +18,47 @@ import DragHandleIcon from '@mui/icons-material/DragHandle'
 import Box from '@mui/material/Box'
 import ListCards from './ListCards/ListCards'
 import { mapOrder } from '~/utils/sorts'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 
 
 function Column({ column }) {
-  const [anchorEl, setAnchorEl] = React.useState(null)
-  const open = Boolean(anchorEl)
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget)
-  }
-  const handleClose = () => {
-    setAnchorEl(null)
+
+  // drag and drop
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+    id: column._id,
+    data: { ...column }
+  })
+  const dndKitColumnStyles = {
+
+  //keo tha tren mobile - touchActions tuy nhien ko muot lam nen thay bang MouseSensor - TouchSensor
+  //touchActions: 'none',
+    transform: CSS.Translate.toString(transform),
+    transition
   }
 
-  const oderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
-  return (
-      
-      <Box sx={{
-        minWidth: '300px',
-        maxWidth: '300px',
-        bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#333643' : '#ebecf0'),
-        ml: 2,
-        borderRadius: '6px',
-        height: 'fit-content',
-        maxHeight: (theme) =>  `calc(${theme.trelloCustom.boardContentHeight} - ${theme.spacing(5)})`
-      }}>
+  // dropdown menu
+  const [anchorEl, setAnchorEl] = React.useState(null)
+  const open = Boolean(anchorEl)
+  const handleClick = (event) => { setAnchorEl(event.currentTarget)}
+  const handleClose = () => { setAnchorEl(null)}
+
+  const oderedCards =  mapOrder(column?.cards, column?.cardOrderIds, '_id')
+  return ( 
+      <Box
+      ref={setNodeRef}
+      style={dndKitColumnStyles}
+      {...attributes}
+      {...listeners}
+        sx={{
+          minWidth: '300px',
+          maxWidth: '300px',
+          bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#333643' : '#ebecf0'),
+          ml: 2,
+          borderRadius: '6px',
+          height: 'fit-content',
+          maxHeight: (theme) =>  `calc(${theme.trelloCustom.boardContentHeight} - ${theme.spacing(5)})`
+        }}>
         {/* Box Header */}
         <Box sx={{
           height: (theme) => theme.trelloCustom.columnHeaderHeight,
