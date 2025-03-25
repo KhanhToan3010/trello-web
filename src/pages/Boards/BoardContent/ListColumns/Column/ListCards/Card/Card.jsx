@@ -24,7 +24,8 @@ function Card({ card }) {
   //touchActions: 'none',
     transform: CSS.Translate.toString(transform),
     transition,
-    opacity: isDragging ? 0.5 : 1
+    opacity: isDragging ? 0.5 : 1,
+    
   }
   return (
     <MuiCard 
@@ -32,9 +33,14 @@ function Card({ card }) {
       sx={{ 
         cursor: 'pointer',
         boxShadow: '0 1px 1px rgba(0, 0, 0, 0.2)',
-        overflow: 'unset'
+        overflow: 'unset',
+        // neu card chua FE_PlaceholderCard thi set block khong chua set none
+        display: card?.FE_PlaceholderCard ? 'none' : 'block',
+        // Cach 2: dung css de set height cho card
+        // height: card?.FE_PlaceholderCard ? '0px' : 'unset',
       }}
     >
+      
       
       {card?.cover && <CardMedia sx={{ height: 140 }} image={card?.cover}/>}
       
