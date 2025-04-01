@@ -41,6 +41,7 @@ function BoardBar({ board }) {
       }}>
 
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2}}>
+      <Tooltip title={board?.description}>
       <Chip 
         sx={ BOARDBAR_STYLE }
         icon={<DashboardIcon />} 
@@ -48,7 +49,7 @@ function BoardBar({ board }) {
         //clickable
         onClick={() => {}}
       />
-
+      </Tooltip>
       <Chip 
         sx={ BOARDBAR_STYLE }
         icon={<VpnLockIcon />} 
@@ -78,10 +79,7 @@ function BoardBar({ board }) {
         //clickable
         onClick={() => {}}
       />
-
-      
       </Box>
-
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2}}>
         <Button 
           variant="outlined" 
