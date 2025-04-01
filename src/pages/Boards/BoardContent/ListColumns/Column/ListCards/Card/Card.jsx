@@ -38,6 +38,8 @@ function Card({ card }) {
         display: card?.FE_PlaceholderCard ? 'none' : 'block',
         // Cach 2: dung css de set height cho card
         // height: card?.FE_PlaceholderCard ? '0px' : 'unset',
+        border: '1px solid #e0e0e0',
+        '&:hover': {borderColor: (theme) => theme.palette.primary.main}
       }}
     >
       
