@@ -170,6 +170,7 @@ function Column({ column }) {
               size='small' 
               variant='outlined'
               autoFocus
+              data-no-dnd= "true"
               value={newCardTitle}
               onChange={(e ) => setNewCardTitle(e.target.value)}
               sx={{ 
@@ -187,7 +188,7 @@ function Column({ column }) {
                 '& MuiOutlinedInput-input': { borderRadius: 1}
               }} 
           />
-          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center',  }}>
             <Button
               onClick={addNewCard}
               variant='contained' size='small'
@@ -202,7 +203,7 @@ function Column({ column }) {
                 fontSize='small'
                 sx={{ 
                   cursor: 'pointer', 
-                  color: (theme) => theme.palette.warning.light,
+                  color: (theme) => theme.palette.warning.light
                   }}
                 onClick={toggleOpenNewCardForm}
               />
