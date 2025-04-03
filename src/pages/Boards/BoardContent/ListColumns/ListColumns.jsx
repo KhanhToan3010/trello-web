@@ -9,11 +9,11 @@ import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
 //import theme from '~/theme'
 
-function ListColumns({ columns }) {
+function ListColumns({ columns, createNewColumn, createNewCard }) {
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm) 
   const [newColumnTitle, setNewColumnTitle] = useState('')
-  const addNewColumn = () => {
+  const addNewColumn = async () => {
     if(!newColumnTitle) {
       //alert('Please enter column title!')
       toast.warning('Please enter column title!')
@@ -21,8 +21,12 @@ function ListColumns({ columns }) {
       return
     }
       
-    console.log('newColumnTitle: ', newColumnTitle)
-    // CAll API to add new column
+    // Tao du lieu Column de goi API
+    const newColumnData =  {
+      title: newColumnTitle,
+    }
+     await createNewColumn(newColumnData)
+
     // Close form and clear input
     toggleOpenNewColumnForm()
     setNewColumnTitle('')
@@ -39,7 +43,7 @@ function ListColumns({ columns }) {
         '&::-webkit-scrollbar-track': { m: 2 }
       }}>
 
-        {columns?.map(column =>  <Column key={column._id} column={column} />)}
+        {columns?.map(column =>  <Column key={column._id} column={column} createNewCard={createNewCard} />)}
 
         {/* Box Add Column */}
         {!openNewColumnForm

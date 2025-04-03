@@ -26,7 +26,7 @@ import { toast } from 'react-toastify'
 
 
 
-function Column({ column }) {
+function Column({ column, createNewCard }) {
 
   // drag and drop
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -55,7 +55,7 @@ function Column({ column }) {
   const [openNewCardForm, setOpenNewCardForm] = useState(false)
   const toggleOpenNewCardForm = () => setOpenNewCardForm(!openNewCardForm) 
   const [newCardTitle, setNewCardTitle] = useState('')
-  const addNewCard = () => {
+  const addNewCard = async () => {
     if(!newCardTitle) {
       //alert('Please enter Card title!')
       toast.warning('Please enter Card title!')
@@ -63,7 +63,14 @@ function Column({ column }) {
     }
       
     console.log('newCardTitle: ', newCardTitle)
-    // CAll API to add new Card
+    // Tao du lieu Column de goi API
+    const newCardData =  {
+      title: newCardTitle,
+      columnId: column._id
+    }
+
+    await createNewCard(newCardData)
+
     // Close form and clear input
     toggleOpenNewCardForm()
     setNewCardTitle('')
