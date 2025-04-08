@@ -17,7 +17,6 @@ import Button from '@mui/material/Button'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
 import Box from '@mui/material/Box'
 import ListCards from './ListCards/ListCards'
-import { mapOrder } from '~/utils/sorts'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import TextField from '@mui/material/TextField'
@@ -49,7 +48,8 @@ function Column({ column, createNewCard }) {
   const handleClick = (event) => { setAnchorEl(event.currentTarget)}
   const handleClose = () => { setAnchorEl(null)}
 
-  const oderedCards =  mapOrder(column?.cards, column?.cardOrderIds, '_id')
+  // card da duoc sap sep o cong component cha (board/_id.jsx)
+  const oderedCards = column.cards
 
   // Add new card
   const [openNewCardForm, setOpenNewCardForm] = useState(false)
