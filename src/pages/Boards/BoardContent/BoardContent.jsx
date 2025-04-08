@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box'
 //import React, { useCallback } from 'react'
 import ListColumns from './ListColumns/ListColumns'
-import { mapOrder } from '~/utils/sorts'
 import { DndContext, PointerSensor, useSensor, useSensors, DragOverlay, defaultDropAnimationSideEffects,
          closestCorners, pointerWithin, rectIntersection, getFirstCollision, closestCenter} from '@dnd-kit/core'
 import { MouseSensor, TouchSensor } from '~/customLibraries/DndKitSensors'
@@ -17,7 +16,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
 }
 
-function BoardContent({ board, createNewColumn, createNewCard }) {
+function BoardContent({ board, createNewColumn, createNewCard, moveColumns, moveCardInTheSameColumn }) {
   //const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 15 } })
   // activationConstraint: { distance: 15 } la khoang cach toi thieu 15px thi moi bat dau keo
   const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 15 } })
@@ -39,7 +38,8 @@ function BoardContent({ board, createNewColumn, createNewCard }) {
 
   useEffect(() => {
     //const orderedColumns = mapOrder(board?.columns, board?.columnOrderIds, '_id')
-    setOrderedColumns(mapOrder(board?.columns, board?.columnOrderIds, '_id'))
+    // column da duoc sap sep o component cha (board/_id.jsx)
+    setOrderedColumns(board.columns)
   }, [board])
 
   const findColumnByCardId = (cardId) => {
@@ -180,36 +180,42 @@ function BoardContent({ board, createNewColumn, createNewCard }) {
         console.log('keo tha card trong cung 1 column ')
         // lay vitri cu tu oldColumnWhenDraggingCard
         const oldCardIndex = oldColumnWhenDraggingCard?.cards?.findIndex(c => c._id === activeDragItemId)
+        console.log('oldCardIndex: ', oldCardIndex)
         // lay vitri moi tu overColumn
         const newCardIndex = overColumn?.cards?.findIndex(c => c._id === overCardId)
+        console.log('newCardIndex: ', newCardIndex)
         const dndOrderedCards = arrayMove(oldColumnWhenDraggingCard?.cards, oldCardIndex, newCardIndex)
+        const dndOrderedCardIds = dndOrderedCards.map(card => card._id)
         console.log('dndOrderedCards: ', dndOrderedCards)
         
         setOrderedColumns(prevColumns => {
         const nextColumns = cloneDeep(prevColumns)
         const targetColumn = nextColumns.find(column => column._id === overColumn._id)// lay id column dang tha card
         targetColumn.cards = dndOrderedCards
-        targetColumn.cardOrderIds = dndOrderedCards.map( card => card._id)
+        targetColumn.cardOrderIds = dndOrderedCardIds
         console.log( 'targetColumn: ', targetColumn )
         return nextColumns 
         })
+
+      // Goi len props func moveCardInTheSameColumn nam o component cha (board/_id.jsx)
+      moveCardInTheSameColumn(dndOrderedCards, dndOrderedCardIds, oldColumnWhenDraggingCard._id)
       }
     }
     
     // Xu li keo tha COLUMN trong BoradContent
     if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COULMN){
+
       //console.log('drap and drop card, nothing action')
       if (active.id !== over.id) {
         // lay vitri cu tu thanh phan active
         const oldColumnIndex = orderedColumns.findIndex(column => column._id === active.id)
         // lay vitri moi tu thanh phan over
         const newColumnIndex = orderedColumns.findIndex(column => column._id === over.id)
-  
-        const dndorderedColumns = arrayMove(orderedColumns, oldColumnIndex, newColumnIndex)
-        // const dndorderedColumnsIsd = dndorderedColumns.map(c => c._id)
-        // console.log('dndorderedColumns: ', dndorderedColumns)
-        // console.log('dndorderedColumnsIsd: ', dndorderedColumnsIsd)
-        setOrderedColumns(dndorderedColumns)
+        const dndOrderedColumns = arrayMove(orderedColumns, oldColumnIndex, newColumnIndex)
+
+        setOrderedColumns(dndOrderedColumns)
+        // Goi len props func moveColumns nam o component cha (board/_id.jsx)
+        moveColumns(dndOrderedColumns)
       }
     }
     setActiveDragItemId(null)
