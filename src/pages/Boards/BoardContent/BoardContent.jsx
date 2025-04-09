@@ -16,7 +16,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
 }
 
-function BoardContent({ board, createNewColumn, createNewCard, moveColumns, moveCardInTheSameColumn }) {
+function BoardContent({ board, createNewColumn, createNewCard, moveColumns, moveCardInTheSameColumn, moveCardToDiffrentColumn }) {
   //const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 15 } })
   // activationConstraint: { distance: 15 } la khoang cach toi thieu 15px thi moi bat dau keo
   const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 15 } })
@@ -54,7 +54,8 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns, move
     over,
     activeColumn,
     activeDraggingCardId,
-    activeDraggingCardData
+    activeDraggingCardData,
+    triggerFrom
   ) => {
     setOrderedColumns(prevColumns => {
       // tim vitri cua overcard trong column dich ( noi actice card dang keo toi)
@@ -78,7 +79,7 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns, move
 
         // Them PlaceHolderCard neu Column cu rong
         if(isEmpty(nextActiveColumn.cards)){
-          console.log('card cuoi cung bi keo di')
+          //console.log('card cuoi cung bi keo di')
           nextActiveColumn.cards = [generatePlaceholderCard(nextActiveColumn)]
         }
 
@@ -99,7 +100,17 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns, move
         nextOverColumn.cards = nextOverColumn.cards.filter(card => !card.FE_PlaceholderCard)
         // cap nhat lai vi tri card tai column over
         nextOverColumn.cardOrderIds= nextOverColumn.cards.map(card => card._id)
-        console.log('nextOverColumn: ', nextOverColumn)
+        //console.log('nextOverColumn: ', nextOverColumn)
+      }
+
+      // Func duoc goi tu ham handrapEnd co nghia la keo tha xong --> call Api 1 lan de tranh anh huong performance
+      if ( triggerFrom === 'handleDragEnd' ) {
+        moveCardToDiffrentColumn(
+          activeDraggingCardId,
+          oldColumnWhenDraggingCard._id, 
+          nextOverColumn._id,
+          nextColumns
+          )
       }
       return nextColumns
       })
@@ -141,13 +152,14 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns, move
         over,
         activeColumn,
         activeDraggingCardId,
-        activeDraggingCardData
+        activeDraggingCardData,
+        'handleDrapOver'
       ) 
     }
   }
   const handleDragEnd = (event) => {
     const { active, over } = event
-    if (!over) return  // neu keo ra ngoai return luon trnah loi
+    if (!over || !over) return  // neu keo ra ngoai return luon trnah loi
     // Xu li keo tha CARD
     if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD){
       //console.log('drap and drop card, nothing action')
@@ -173,7 +185,8 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns, move
           over,
           activeColumn,
           activeDraggingCardId,
-          activeDraggingCardData
+          activeDraggingCardData,
+          'handleDragEnd'
         ) 
       } else {
 
@@ -184,6 +197,7 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns, move
         // lay vitri moi tu overColumn
         const newCardIndex = overColumn?.cards?.findIndex(c => c._id === overCardId)
         console.log('newCardIndex: ', newCardIndex)
+
         const dndOrderedCards = arrayMove(oldColumnWhenDraggingCard?.cards, oldCardIndex, newCardIndex)
         const dndOrderedCardIds = dndOrderedCards.map(card => card._id)
         console.log('dndOrderedCards: ', dndOrderedCards)

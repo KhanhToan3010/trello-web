@@ -9,7 +9,9 @@ import { mapOrder } from '~/utils/sorts'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 // import { mockData } from '~/apis/mock-data'
-import { fetchBoardDetailsAPI, createNewCardAPI, createNewColumnAPI, updateBoardDetailsAPI, updateColumnDetailsAPI } from '~/apis' 
+import { fetchBoardDetailsAPI, createNewCardAPI, createNewColumnAPI, updateBoardDetailsAPI, updateColumnDetailsAPI,
+  moveCardToDifffrentColumnAPI
+ } from '~/apis' 
 
 function Board() {
   const [board, setBoard] = useState(null)
@@ -67,9 +69,17 @@ const createNewCard =  async (newCardData) => {
   // tim ban ghi column trong board, column ma chua card vua duoc tao 
   const columnToUpdate = newBoard.columns.find( column => column._id === createdCard.columnId)
   if (columnToUpdate) {
-    columnToUpdate.cards.push(createdCard)
-    columnToUpdate.cardOrderIds.push(createdCard._id)
+
+    if (columnToUpdate.cards.some( card => card.FE_PlaceholderCard)) {
+      columnToUpdate.cards = [createdCard]
+      columnToUpdate.cardOrderIds = [createdCard._id]
+
+    } else {
+      columnToUpdate.cards.push(createdCard)
+      columnToUpdate.cardOrderIds.push(createdCard._id)
+    }
   }
+  console.log('columnToUpDate: ',columnToUpdate)
   setBoard(newBoard)
 }
 
@@ -104,6 +114,32 @@ const moveCardInTheSameColumn = (dndOrderedCards, dndOrderedCardIds, columnId) =
  updateColumnDetailsAPI(columnId, { cardOrderIds: dndOrderedCardIds })
 }
 
+// step1: update cardOrderIds trong column ban dau ( xoa card._id ra khoi mang)
+// step 2: update cardOrderIds trong column ma card di den ( them card._id vao mang )
+// step 3: update columnId cua card da keo
+const moveCardToDiffrentColumn = (currentCardId, prevColumnId, nextColumnId, dndOrderedColumns) => {
+   // Update columnOrderIds trong board
+   const dndOrderedColumnsIds = dndOrderedColumns.map(c => c._id)
+   const newBoard = { ...board}
+   newBoard.columns = dndOrderedColumns
+   newBoard.columnOrderIds = dndOrderedColumnsIds
+   setBoard(newBoard)
+
+   // Call Api update columnOrderIds trong DB
+  let prevCardOrderIds = dndOrderedColumns.find(c => c._id === prevColumnId)?.cardOrderIds
+  // khi keo card cuoi cung ra khoi column ( column rong se chua palaceholder card ) --> xoa placeholder card truoc khi gui ve BE
+  if (prevCardOrderIds[0].includes('placeholder-card')) { prevCardOrderIds = []}
+
+   moveCardToDifffrentColumnAPI({
+    currentCardId,
+    prevColumnId,
+    prevCardOrderIds,
+    nextColumnId,
+    nextCardOrderIds: dndOrderedColumns.find(c => c._id === nextColumnId)?.cardOrderIds
+   })
+
+}
+
 if (!board) {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', gap: 2 }}> 
@@ -121,6 +157,7 @@ if (!board) {
         createNewCard={createNewCard}
         moveColumns={moveColumns}
         moveCardInTheSameColumn={moveCardInTheSameColumn}
+        moveCardToDiffrentColumn={moveCardToDiffrentColumn}
       />
     </Container>
   )
