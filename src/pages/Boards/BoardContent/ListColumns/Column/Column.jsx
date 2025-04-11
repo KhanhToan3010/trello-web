@@ -22,10 +22,11 @@ import { CSS } from '@dnd-kit/utilities'
 import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
 import { toast } from 'react-toastify'
+import { useConfirm } from 'material-ui-confirm'
 
 
 
-function Column({ column, createNewCard }) {
+function Column({ column, createNewCard, deleteColumnDetails}) {
 
   // drag and drop
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -75,6 +76,28 @@ function Column({ column, createNewCard }) {
     toggleOpenNewCardForm()
     setNewCardTitle('')
   }
+
+  // Delete column and cards
+  const confirmDeleteColumn = useConfirm()
+  const handleDeleteColumn = () => {
+    confirmDeleteColumn({
+      title: 'Delete column ?',
+      description: 'Are you sure you want to delete this column?',
+
+      confirmationText: 'Delete',
+      cancellationText: 'Cancel'
+      // confirmationKeyword: 'Delete',
+      // confirmationKeywordTextFieldProps: { label: 'Enter "Delete" to confirm' },
+    }).then( () => {
+       // goi en props func deleteColumnDetails o component cha cao nhat _id.jsx
+      deleteColumnDetails(column._id)
+    }
+    ).catch(() => {}) 
+
+    
+  }
+
+
   return ( 
     <div ref={setNodeRef} style={dndKitColumnStyles} {...attributes} >
         <Box
@@ -119,12 +142,21 @@ function Column({ column, createNewCard }) {
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
+                onClick={handleClose}
                 MenuListProps={{
                   'aria-labelledby': 'basic-column-dropdown',
                 }}
               >
-              <MenuItem>
-                <ListItemIcon><AddCardIcon fontSize="small" /></ListItemIcon>
+              <MenuItem  
+                onClick={toggleOpenNewCardForm}
+                sx={{ 
+                  '&:hover': {
+                    color: 'success.light',
+                    '& .add-card-icon': {color: 'success.light'} 
+                    }
+                  }}
+              >
+                <ListItemIcon><AddCardIcon className='add-card-icon' fontSize="small" /></ListItemIcon>
                 <ListItemText>Add new card</ListItemText>
               </MenuItem>
               <MenuItem>
@@ -140,12 +172,20 @@ function Column({ column, createNewCard }) {
                 <ListItemText>Paste</ListItemText>
               </MenuItem>
                 <Divider />
-                <MenuItem>
+              <MenuItem 
+                onClick={ handleDeleteColumn }
+               sx={{ 
+                '&:hover': {
+                  color: 'warning.dark',
+                  '& .delete-forever-icon': {color: 'warning.dark'} 
+                  }
+                }}
+              >
                   <ListItemIcon>
-                    <DeleteForeverIcon fontSize="small" />
+                    <DeleteForeverIcon className='delete-forever-icon' fontSize="small" />
                   </ListItemIcon>
-                  <ListItemText>Remove this column</ListItemText>
-                </MenuItem>
+                  <ListItemText>Delete this column</ListItemText>
+              </MenuItem>
                 <MenuItem>
                   <ListItemIcon>
                     <Cloud fontSize="small" />
@@ -161,8 +201,7 @@ function Column({ column, createNewCard }) {
           {/* Box Footer */}
           <Box sx={{
             height: (theme) => theme.trelloCustom.columnFooterHeight,
-            p: 2
-            
+            p: 2 
           }}>
 
             {!openNewCardForm

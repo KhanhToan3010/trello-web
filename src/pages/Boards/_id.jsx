@@ -8,9 +8,10 @@ import { isEmpty} from 'lodash'
 import { mapOrder } from '~/utils/sorts'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
+import { toast } from 'react-toastify'
 // import { mockData } from '~/apis/mock-data'
 import { fetchBoardDetailsAPI, createNewCardAPI, createNewColumnAPI, updateBoardDetailsAPI, updateColumnDetailsAPI,
-  moveCardToDifffrentColumnAPI
+  moveCardToDifffrentColumnAPI, deleteColumnDetailsAPI
  } from '~/apis' 
 
 function Board() {
@@ -69,8 +70,7 @@ const createNewCard =  async (newCardData) => {
   // tim ban ghi column trong board, column ma chua card vua duoc tao 
   const columnToUpdate = newBoard.columns.find( column => column._id === createdCard.columnId)
   if (columnToUpdate) {
-
-    if (columnToUpdate.cards.some( card => card.FE_PlaceholderCard)) {
+    if (columnToUpdate.cards.some( card => card.FE_PlaceholderCard )) {
       columnToUpdate.cards = [createdCard]
       columnToUpdate.cardOrderIds = [createdCard._id]
 
@@ -140,6 +140,20 @@ const moveCardToDiffrentColumn = (currentCardId, prevColumnId, nextColumnId, dnd
 
 }
 
+// Xu li xoa column va cards
+const deleteColumnDetails = (columnId) => {
+  const newBoard = { ...board}
+  newBoard.columns = newBoard.columns.filter(c => c._id !== columnId)
+  newBoard.columnOrderIds = newBoard.columnOrderIds.filter(_id => _id !== columnId)
+  setBoard(newBoard)
+  
+
+  // Call Api xl phi BE 
+  deleteColumnDetailsAPI(columnId).then( res => {
+    toast.success(res?.deleteResult)
+  })
+}
+
 if (!board) {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', gap: 2 }}> 
@@ -158,6 +172,7 @@ if (!board) {
         moveColumns={moveColumns}
         moveCardInTheSameColumn={moveCardInTheSameColumn}
         moveCardToDiffrentColumn={moveCardToDiffrentColumn}
+        deleteColumnDetails={deleteColumnDetails}
       />
     </Container>
   )
