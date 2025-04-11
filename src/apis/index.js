@@ -29,6 +29,12 @@ export const updateColumnDetailsAPI = async (columnId, updateData) => {
   return response.data
 }
 
+// API xoa column
+export const deleteColumnDetailsAPI = async (columnId) => {
+  const response = await axios.delete(`${API_ROOT}/v1/columns/${columnId}`)
+  return response.data
+}
+
 // Cards API
 export const createNewCardAPI = async (newCardData) => {
   const response = await axios.post(`${API_ROOT}/v1/cards`, newCardData)
